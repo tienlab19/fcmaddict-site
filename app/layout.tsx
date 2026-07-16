@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ??
-  "https://tienlab19.github.io/FCMaddict";
+  "https://tienlab19.github.io/fcmaddict-site";
 const ogImage = `${siteUrl}/og.png`;
 const appIcon = `${siteUrl}/app-icon.png`;
 

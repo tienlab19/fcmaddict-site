@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const isGitHubPages = process.env.GITHUB_PAGES === "true";
-const githubBasePath = "/FCMaddict";
+const githubBasePath = "/fcmaddict-site";
 
 const nextConfig: NextConfig = {
   distDir: isGitHubPages ? ".next-github" : ".next",

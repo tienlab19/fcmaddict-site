@@ -58,7 +58,7 @@ test("publishes App Store metadata and navigation", async () => {
 
   assert.match(
     html,
-    /<meta property="og:image" content="https:\/\/tienlab19\.github\.io\/FCMaddict\/og\.png"\/>/i,
+    /<meta property="og:image" content="https:\/\/tienlab19\.github\.io\/fcmaddict-site\/og\.png"\/>/i,
   );
   assert.match(html, /href="\/privacy"/i);
   assert.match(html, /href="\/support"/i);
