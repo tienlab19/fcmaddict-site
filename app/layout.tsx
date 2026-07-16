@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { headers } from "next/headers";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,7 +12,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin", "latin-ext"],
 });
 
-const baseMetadata: Metadata = {
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  "https://tienlab19.github.io/FCMaddict";
+const ogImage = `${siteUrl}/og.png`;
+const appIcon = `${siteUrl}/app-icon.png`;
+
+export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: "FCMaddict — Trợ lý cầu thủ & đội hình",
     template: "%s",
@@ -22,8 +28,8 @@ const baseMetadata: Metadata = {
     "Bộ công cụ đồng hành giúp theo dõi cầu thủ, bảng xếp hạng, shard và OVR đội hình.",
   applicationName: "FCMaddict",
   icons: {
-    icon: "/app-icon.png",
-    apple: "/app-icon.png",
+    icon: appIcon,
+    apple: appIcon,
   },
   keywords: [
     "cầu thủ",
@@ -40,38 +46,16 @@ const baseMetadata: Metadata = {
     title: "FCMaddict — Mọi quyết định đội hình, sáng rõ hơn",
     description:
       "Khám phá cầu thủ, tối ưu shard và kiểm tra OVR trong một ứng dụng gọn nhẹ.",
+    images: [{ url: ogImage, width: 1672, height: 941, alt: "FCMaddict" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "FCMaddict — Trợ lý cầu thủ & đội hình",
     description:
       "Khám phá cầu thủ, tối ưu shard và kiểm tra OVR trong một ứng dụng gọn nhẹ.",
+    images: [ogImage],
   },
 };
-
-export async function generateMetadata(): Promise<Metadata> {
-  const requestHeaders = await headers();
-  const host =
-    requestHeaders.get("x-forwarded-host") ??
-    requestHeaders.get("host") ??
-    "localhost:3000";
-  const protocol =
-    requestHeaders.get("x-forwarded-proto") ??
-    (host.startsWith("localhost") ? "http" : "https");
-  const ogImage = `${protocol}://${host}/og.png`;
-
-  return {
-    ...baseMetadata,
-    openGraph: {
-      ...baseMetadata.openGraph,
-      images: [{ url: ogImage, width: 1672, height: 941, alt: "FCMaddict" }],
-    },
-    twitter: {
-      ...baseMetadata.twitter,
-      images: [ogImage],
-    },
-  };
-}
 
 export default function RootLayout({
   children,
