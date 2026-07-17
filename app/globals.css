@@ -80,18 +80,12 @@ a {
 }
 
 .brand-mark {
-  display: grid;
   width: 38px;
   height: 38px;
-  place-items: center;
   border: 1px solid rgba(255, 152, 86, 0.48);
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--orange-light), var(--orange-dark));
+  border-radius: 11px;
   box-shadow: 0 8px 24px rgba(255, 118, 34, 0.28);
-  color: #130b06;
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 13px;
-  font-weight: 900;
+  object-fit: cover;
 }
 
 .site-nav {

@@ -1,13 +1,30 @@
+import Image from "next/image";
 import Link from "next/link";
 
 type CurrentPage = "home" | "privacy" | "support";
+
+const BASE_PATH =
+  process.env.GITHUB_PAGES === "true" ? "/fcmaddict-site" : "";
+
+function BrandMark() {
+  return (
+    <Image
+      className="brand-mark"
+      src={`${BASE_PATH}/app-icon.png`}
+      alt="Logo FCMaddict"
+      width={38}
+      height={38}
+      priority
+    />
+  );
+}
 
 export function SiteHeader({ current }: { current: CurrentPage }) {
   return (
     <header className="site-header">
       <div className="section-wrap header-inner">
         <Link className="brand" href="/" aria-label="FCMaddict — Trang chủ">
-          <span className="brand-mark">FC</span>
+          <BrandMark />
           <span>FCMaddict</span>
         </Link>
         <nav className="site-nav" aria-label="Điều hướng chính">
@@ -38,7 +55,7 @@ export function SiteFooter() {
       <div className="section-wrap footer-grid">
         <div>
           <Link className="brand" href="/">
-            <span className="brand-mark">FC</span>
+            <BrandMark />
             <span>FCMaddict</span>
           </Link>
           <p>Trợ lý cầu thủ và đội hình dành cho cộng đồng FC Mobile.</p>
