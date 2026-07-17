@@ -166,15 +166,17 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="feature-grid">
+          <ol className="steps">
             {steps.map((step) => (
-              <article className="feature-card" key={step.title}>
-                <span className="feature-code">{step.code}</span>
-                <h3>{step.title}</h3>
-                <p>{step.body}</p>
-              </article>
+              <li className="step" key={step.title}>
+                <span className="step-number">{step.code}</span>
+                <div className="step-body">
+                  <h3>{step.title}</h3>
+                  <p>{step.body}</p>
+                </div>
+              </li>
             ))}
-          </div>
+          </ol>
         </section>
 
         <section className="section-wrap privacy-callout">
