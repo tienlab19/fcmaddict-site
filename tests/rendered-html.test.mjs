@@ -25,7 +25,7 @@ async function render(pathname) {
 const pages = [
   {
     path: "/",
-    title: "FCMaddict — Trợ lý cầu thủ &amp; đội hình",
+    title: "FCMaddict — Trợ lý cầu thủ &amp; đội hình cho FC Mobile",
     marker: "Mọi quyết định đội hình",
   },
   {
