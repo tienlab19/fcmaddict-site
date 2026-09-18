@@ -35,10 +35,13 @@ triển khai GitHub Pages tại `https://tienlab19.github.io/fcmaddict-site/`.
 
 ## Cấu trúc
 
-- `app/tools/`: web app và logic ShardIQ/OVR đã port từ Flutter.
+- `features/*/domain/`: model, event contract và logic nghiệp vụ thuần.
+- `features/*/application/`: use case và port giao tiếp hạ tầng.
+- `features/*/infrastructure/`: Firebase Analytics và HTTP adapter.
+- `features/*/presentation/`: giao diện feature; không khởi tạo SDK trực tiếp.
+- `app/`: route, layout, landing page, quyền riêng tư và hỗ trợ.
 - `scripts/sync-data.mjs`: đồng bộ API thành JSON cùng origin, tránh lỗi CORS.
 - `public/data/`: snapshot dữ liệu dùng khi chạy và fallback khi API lỗi.
-- `app/`: landing page, chính sách quyền riêng tư, hỗ trợ.
 - `public/`: logo và ảnh chia sẻ mạng xã hội.
-- `tests/`: kiểm tra HTML render phía server.
+- `tests/`: kiểm tra domain, Analytics contract và HTML render phía server.
 - `worker/`, `db/`: hạ tầng Vinext/Cloudflare dự phòng; website hiện không dùng DB.

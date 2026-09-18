@@ -28,6 +28,7 @@ export default function PrivacyPage() {
             <ul>
               <li>Không yêu cầu tài khoản</li>
               <li>Không quảng cáo hoặc theo dõi quảng cáo</li>
+              <li>Dùng Firebase Analytics để đo lường sử dụng tổng hợp</li>
               <li>Không bán dữ liệu cá nhân</li>
               <li>Không tự truy cập tệp trên thiết bị</li>
               <li>Dữ liệu nhập được xử lý trong trình duyệt khi có thể</li>
@@ -95,7 +96,22 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2>6. Tệp tải xuống và Clipboard</h2>
+              <h2>6. Phân tích sử dụng</h2>
+              <p>
+                Website sử dụng Firebase Analytics của Google để đo lượt truy
+                cập, loại thiết bị, trình duyệt, khu vực gần đúng và tương tác
+                tổng hợp. Dịch vụ này có thể xử lý cookie, mã định danh và dữ
+                liệu kỹ thuật theo chính sách của Google.
+              </p>
+              <p>
+                FCMaddict dùng dữ liệu phân tích để đánh giá hiệu năng và cải
+                thiện tính năng, không dùng dữ liệu này cho quảng cáo cá nhân
+                hóa hoặc bán cho bên thứ ba.
+              </p>
+            </section>
+
+            <section>
+              <h2>7. Tệp tải xuống và Clipboard</h2>
               <p>
                 Website chỉ tải hình ảnh khi bạn chủ động chọn tải. FCMaddict
                 không tự đọc tệp cá nhân trên thiết bị. Khi bạn chọn sao chép mã
@@ -104,7 +120,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2>7. Quảng cáo và theo dõi</h2>
+              <h2>8. Quảng cáo và theo dõi</h2>
               <p>
                 Phiên bản hiện tại không hiển thị quảng cáo và không sử dụng dữ
                 liệu để theo dõi bạn giữa các website nhằm phục vụ quảng cáo.
@@ -112,7 +128,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2>8. Lưu giữ và xóa dữ liệu</h2>
+              <h2>9. Lưu giữ và xóa dữ liệu</h2>
               <p>
                 FCMaddict không vận hành hệ thống tài khoản người dùng. Bạn có thể
                 xóa dữ liệu cục bộ bằng công cụ quản lý dữ liệu website của trình
@@ -122,7 +138,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2>9. Trẻ em</h2>
+              <h2>10. Trẻ em</h2>
               <p>
                 FCMaddict không được thiết kế để cố ý thu thập thông tin cá nhân
                 của trẻ em. Nếu bạn cho rằng trẻ em đã cung cấp thông tin cá nhân,
@@ -131,7 +147,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2>10. Thay đổi chính sách</h2>
+              <h2>11. Thay đổi chính sách</h2>
               <p>
                 Chính sách có thể được cập nhật khi tính năng hoặc cách xử lý dữ
                 liệu thay đổi. Ngày cập nhật mới nhất luôn được hiển thị ở đầu

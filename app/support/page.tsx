@@ -56,6 +56,7 @@ export default function SupportPage() {
             <a
               className="button button-primary full-width"
               href="mailto:tientran99.bka@gmail.com?subject=FCMaddict%20Support"
+              data-analytics-source="support_hero"
             >
               tientran99.bka@gmail.com
             </a>
@@ -92,7 +93,12 @@ export default function SupportPage() {
           </div>
           <div className="faq-list">
             {faqs.map((faq, index) => (
-              <details key={faq.question} open={index === 0}>
+              <details
+                key={faq.question}
+                open={index === 0}
+                data-analytics-content-type="faq"
+                data-analytics-content-id={`faq_${index + 1}`}
+              >
                 <summary>{faq.question}<span>+</span></summary>
                 <p>{faq.answer}</p>
               </details>
@@ -108,6 +114,7 @@ export default function SupportPage() {
           <a
             className="button button-secondary"
             href="mailto:tientran99.bka@gmail.com?subject=FCMaddict%20Support"
+            data-analytics-source="support_bottom"
           >
             Gửi email
           </a>

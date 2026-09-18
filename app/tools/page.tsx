@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
+import ToolsApp from "@/features/tools/presentation/ToolsApp";
 import { SiteFooter, SiteHeader } from "../_components/SiteChrome";
-import ToolsApp from "./ToolsApp";
 
 export const metadata: Metadata = {
   title: "Công cụ FC Mobile — FCMaddict",

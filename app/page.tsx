@@ -1,5 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 import type { Metadata } from "next";
 import Link from "next/link";
+import appData from "@/public/data/app-data.json";
 import { SiteFooter, SiteHeader } from "./_components/SiteChrome";
 
 export const metadata: Metadata = {
@@ -8,209 +10,120 @@ export const metadata: Metadata = {
     "FCMaddict là trợ lý FC Mobile all-in-one: tra cứu cầu thủ, xem bảng xếp hạng theo vị trí, tối ưu shard với ShardIQ, tính OVR đội hình và cập nhật mã quà tặng — miễn phí, không tài khoản, không quảng cáo.",
 };
 
-const features = [
-  {
-    code: "01",
-    title: "Hồ sơ cầu thủ chi tiết",
-    body: "Chỉ số, ưu và nhược điểm, review cộng đồng cùng các thẻ mới nhất — gom về một luồng dễ đọc, luôn cập nhật.",
-  },
-  {
-    code: "TOP",
-    title: "Bảng xếp hạng theo vị trí",
-    body: "Top 10, lựa chọn tầm trung và phương án tiết kiệm cho từng vị trí, giúp bạn chọn đúng cầu thủ trong tầm ngân sách.",
-  },
-  {
-    code: "IQ",
-    title: "Tối ưu shard với ShardIQ",
-    body: "Nhập ngân sách shard, chọn vị trí và sự kiện — ShardIQ gợi ý những tổ hợp cầu thủ đáng đầu tư nhất cho bạn.",
-  },
-  {
-    code: "OVR",
-    title: "Máy tính OVR đội hình",
-    body: "Chọn sơ đồ, nhập OVR đội chính và dự bị để dự đoán OVR toàn đội trực tiếp trong trình duyệt.",
-  },
-  {
-    code: "GIFT",
-    title: "Mã quà tặng luôn mới",
-    body: "Theo dõi mã đang hoạt động, kiểm tra trạng thái còn hạn và sao chép chỉ với một chạm để nhập vào game.",
-  },
-  {
-    code: "IMG",
-    title: "Thư viện thẻ & ảnh render",
-    body: "Khám phá thẻ cầu thủ và ảnh render chất lượng cao, sau đó tải hình ảnh bạn cần về thiết bị.",
-  },
+const tools = [
+  { code: "PLAY", title: "Cơ sở dữ liệu cầu thủ", body: "Tìm theo tên, vị trí, OVR và chương trình." },
+  { code: "TOP", title: "Bảng xếp hạng", body: "Top, tầm trung và tiết kiệm cho 12 vị trí." },
+  { code: "IQ", title: "ShardIQ", body: "Tối ưu tổ hợp cầu thủ theo ngân sách shard." },
+  { code: "OVR", title: "Máy tính OVR", body: "Tính OVR đội hình chính, dự bị và badge." },
+  { code: "GIFT", title: "Mã quà tặng", body: "Theo dõi và sao chép mã đang hoạt động." },
+  { code: "IMG", title: "Thư viện hình ảnh", body: "Tải card art, player render và icon render." },
 ];
 
-const steps = [
-  {
-    code: "1",
-    title: "Mở website, không cần đăng nhập",
-    body: "Truy cập bằng trình duyệt và dùng ngay. Không cài đặt, không tài khoản, không bước xác thực rườm rà.",
-  },
-  {
-    code: "2",
-    title: "Tra cứu & so sánh",
-    body: "Tìm cầu thủ, đọc bảng xếp hạng theo vị trí và dùng ShardIQ để cân nhắc phương án phù hợp ngân sách.",
-  },
-  {
-    code: "3",
-    title: "Quyết định đội hình",
-    body: "Dùng máy tính OVR để chốt đội hình, lưu mã quà tặng và ảnh render bạn cần — tất cả ở một nơi.",
-  },
+const rankingGroups = [
+  { code: "01", title: "Top 10", body: "Những lựa chọn mạnh nhất theo từng vị trí." },
+  { code: "MID", title: "Tầm trung", body: "Hiệu năng cân bằng với ngân sách vừa phải." },
+  { code: "LOW", title: "Tiết kiệm", body: "Lựa chọn hiệu quả cho đội hình ít coin." },
 ];
 
 export default function Home() {
-  return (
-    <div className="site-shell">
-      <SiteHeader current="home" />
+  const reviews = appData.reviews.slice(0, 5);
+  const activeCode = appData.codes.find((code) => code.active);
+  const playerRenders = appData.playerRenders.slice(0, 3);
+  const cardArts = appData.cards.slice(0, 3);
 
-      <main>
-        <section className="hero section-wrap">
-          <div className="hero-copy">
-            <p className="eyebrow">TRỢ LÝ FC MOBILE</p>
-            <h1>
-              Mọi quyết định đội hình,
-              <span> sáng rõ hơn.</span>
-            </h1>
-            <p className="hero-lead">
-              FCMaddict gom mọi công cụ bạn cần cho FC Mobile — tra cứu cầu thủ,
-              tối ưu shard và kiểm tra OVR — vào một website nhanh, trực quan và
-              hoàn toàn miễn phí. Không tài khoản, không quảng cáo.
+  return (
+    <div className="site-shell home-dashboard">
+      <SiteHeader current="home" />
+      <main className="home-main section-wrap">
+        <section className="home-intro">
+          <div className="home-intro-copy">
+            <p className="eyebrow">FC MOBILE COMPANION</p>
+            <h1>Mọi công cụ FC Mobile, trong một nơi.</h1>
+            <p>
+              Mọi quyết định đội hình trở nên rõ ràng hơn với dữ liệu cầu thủ,
+              xếp hạng theo vị trí, ShardIQ và máy tính OVR.
             </p>
             <div className="hero-actions">
-              <Link className="button button-primary" href="/tools">
-                Mở FCMaddict Web
-              </Link>
-              <Link className="button button-secondary" href="/support">
-                Trung tâm hỗ trợ
-              </Link>
-            </div>
-            <div className="trust-row" aria-label="Thông tin nhanh">
-              <span>Miễn phí 100%</span>
-              <span>Không quảng cáo</span>
-              <span>Không cần cài đặt</span>
-              <span>Tiếng Việt & English</span>
+              <Link className="button button-primary" href="/tools" data-analytics-source="home_intro">Mở bộ công cụ</Link>
+              <Link className="button button-secondary" href="/support" data-analytics-source="home_intro">Trung tâm hỗ trợ</Link>
             </div>
           </div>
-
-          <div className="hero-visual" aria-label="Tổng quan FCMaddict">
-            <div className="orbit orbit-one" />
-            <div className="orbit orbit-two" />
-            <div className="score-card score-card-main">
-              <div className="score-card-top">
-                <span className="score-label">SQUAD OVR</span>
-                <span className="live-dot">LIVE</span>
-              </div>
-              <strong>113</strong>
-              <div className="score-progress">
-                <span />
-              </div>
-              <div className="score-grid">
-                <span>Đội chính<br /><b>111</b></span>
-                <span>Dự bị<br /><b>109</b></span>
-                <span>Bonus<br /><b>+2</b></span>
-              </div>
-            </div>
-            <div className="floating-card floating-card-top">
-              <span className="mini-icon">IQ</span>
-              <span><b>ShardIQ</b><small>Tổ hợp tối ưu</small></span>
-            </div>
-            <div className="floating-card floating-card-bottom">
-              <span className="mini-icon green">#1</span>
-              <span><b>Xếp hạng</b><small>Cập nhật theo vị trí</small></span>
-            </div>
+          <div className="home-intro-metrics" aria-label="Dữ liệu FCMaddict">
+            <div><strong>{appData.latestPlayers.length + appData.reviews.length}</strong><span>Hồ sơ & review</span></div>
+            <div><strong>12</strong><span>Vị trí xếp hạng</span></div>
+            <div><strong>{appData.playerRenders.length + appData.iconRenders.length}</strong><span>Ảnh render</span></div>
           </div>
         </section>
 
-        <section className="stats-band" aria-label="Điểm nổi bật">
-          <div className="section-wrap stats-grid">
-            <div><strong>6</strong><span>Công cụ trong 1 website</span></div>
-            <div><strong>2</strong><span>Ngôn ngữ Việt & Anh</span></div>
-            <div><strong>0đ</strong><span>Chi phí sử dụng</span></div>
-            <div><strong>Web</strong><span>Điện thoại & máy tính</span></div>
+        <section className="home-module">
+          <div className="home-module-heading">
+            <div><p className="eyebrow">MỚI NHẤT</p><h2>Đánh giá cầu thủ</h2></div>
+            <Link href="/tools" data-analytics-source="home_reviews">Xem tất cả</Link>
           </div>
-        </section>
-
-        <section className="section-wrap section-block" id="features">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">BỘ CÔNG CỤ TRONG TẦM TAY</p>
-              <h2>Mọi thứ để chơi FC Mobile thông minh hơn</h2>
-            </div>
-            <p>
-              Một trải nghiệm thống nhất để đọc dữ liệu, so sánh lựa chọn và đưa
-              ra quyết định tốt nhất cho đội hình của bạn.
-            </p>
-          </div>
-
-          <div className="feature-grid">
-            {features.map((feature) => (
-              <article className="feature-card" key={feature.title}>
-                <span className="feature-code">{feature.code}</span>
-                <h3>{feature.title}</h3>
-                <p>{feature.body}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="section-wrap section-block" id="how">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">CÁCH HOẠT ĐỘNG</p>
-              <h2>Bắt đầu chỉ trong ba bước</h2>
-            </div>
-            <p>
-              Không cài đặt, không đăng ký. Mở website là dùng được ngay
-              mọi tính năng.
-            </p>
-          </div>
-
-          <ol className="steps">
-            {steps.map((step) => (
-              <li className="step" key={step.title}>
-                <span className="step-number">{step.code}</span>
-                <div className="step-body">
-                  <h3>{step.title}</h3>
-                  <p>{step.body}</p>
+          <div className="home-review-strip">
+            {reviews.map((review) => (
+              <Link key={review.id} className="home-review-card" href="/tools" data-analytics-source="home_reviews">
+                <div className="home-review-art">
+                  <img src={review.image} alt={review.name} loading="lazy" />
+                  <span>{Math.round(review.rating * 10)}</span>
                 </div>
-              </li>
+                <div><small>{review.event} · {review.position}</small><h3>{review.name}</h3><p>WF {review.weakFoot} · SM {review.skillMoves}</p></div>
+              </Link>
             ))}
-          </ol>
+          </div>
         </section>
 
-        <section className="section-wrap privacy-callout">
+        <section className="home-redeem-banner">
           <div>
-            <p className="eyebrow">TÔN TRỌNG QUYỀN RIÊNG TƯ</p>
-            <h2>Không tài khoản, không theo dõi quảng cáo.</h2>
+            <p className="eyebrow">MÃ QUÀ TẶNG FC MOBILE</p>
+            <h2>{activeCode?.code ?? "Mã mới sẽ sớm xuất hiện"}</h2>
+            <p>{activeCode?.reward ?? "Theo dõi thư viện để không bỏ lỡ phần thưởng mới."}</p>
           </div>
-          <div className="callout-copy">
-            <p>
-              FCMaddict không yêu cầu thông tin cá nhân để sử dụng website. Dữ
-              liệu nhập vào công cụ được xử lý trong trình duyệt khi có thể.
-            </p>
-            <Link href="/privacy">Đọc Chính sách quyền riêng tư →</Link>
+          <Link className="button button-primary" href="/tools" data-analytics-source="home_redeem">Mở thư viện mã</Link>
+        </section>
+
+        <section className="home-module">
+          <div className="home-module-heading"><div><p className="eyebrow">BỘ CÔNG CỤ</p><h2>Công cụ & tính năng</h2></div></div>
+          <div className="home-tool-grid">
+            {tools.map((tool) => (
+              <Link key={tool.code} className="home-tool-card" href="/tools" data-analytics-source={`home_tool_${tool.code.toLowerCase()}`}>
+                <span>{tool.code}</span><div><h3>{tool.title}</h3><p>{tool.body}</p></div><b aria-hidden="true">↗</b>
+              </Link>
+            ))}
           </div>
         </section>
 
-        <section className="section-wrap final-cta">
-          <p className="eyebrow">FCMaddict</p>
-          <h2>Hiểu cầu thủ. Tối ưu đội hình.</h2>
-          <p>
-            Được xây dựng độc lập cho cộng đồng FC Mobile — miễn phí, gọn nhẹ và
-            luôn đặt trải nghiệm của bạn lên trước.
-          </p>
-          <div className="hero-actions centered">
-            <Link className="button button-primary" href="/tools">
-              Dùng công cụ ngay
-            </Link>
-            <Link className="button button-secondary" href="/privacy">
-              Quyền riêng tư
-            </Link>
+        <section className="home-module">
+          <div className="home-module-heading">
+            <div><p className="eyebrow">PLAYER RANKINGS</p><h2>Bảng xếp hạng cầu thủ</h2></div>
+            <Link href="/tools" data-analytics-source="home_rankings">Khám phá 12 vị trí</Link>
           </div>
+          <div className="home-ranking-grid">
+            {rankingGroups.map((group) => (
+              <Link key={group.code} href="/tools" data-analytics-source="home_rankings">
+                <span>{group.code}</span><div><h3>{group.title}</h3><p>{group.body}</p></div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="home-showcase-grid">
+          <Link className="home-showcase home-showcase-renders" href="/tools" data-analytics-source="home_renders">
+            <div className="home-showcase-copy"><p className="eyebrow">PLAYER RENDERS</p><h2>Ảnh cầu thủ chất lượng cao</h2><span>Mở thư viện ↗</span></div>
+            <div className="home-render-stack">{playerRenders.map((render) => <img key={render.id} src={render.image} alt={render.name} loading="lazy" />)}</div>
+          </Link>
+          <Link className="home-showcase home-showcase-cards" href="/tools" data-analytics-source="home_cards">
+            <div className="home-showcase-copy"><p className="eyebrow">CARD ARTS</p><h2>Mẫu thẻ sự kiện mới nhất</h2><span>Xem card art ↗</span></div>
+            <div className="home-card-stack">{cardArts.map((card) => <img key={card.id} src={card.image} alt={card.title} loading="lazy" />)}</div>
+          </Link>
+        </section>
+
+        <section className="home-privacy-bar">
+          <div><p className="eyebrow">QUYỀN RIÊNG TƯ</p><h2>Không tài khoản. Không quảng cáo.</h2></div>
+          <p>Dữ liệu nhập vào công cụ được xử lý trong trình duyệt khi có thể.</p>
+          <Link href="/privacy" data-analytics-source="home_privacy">Đọc chính sách ↗</Link>
         </section>
       </main>
-
       <SiteFooter />
     </div>
   );

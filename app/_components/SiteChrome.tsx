@@ -15,6 +15,7 @@ function BrandMark() {
       width={38}
       height={38}
       priority
+      unoptimized
     />
   );
 }
@@ -25,7 +26,7 @@ export function SiteHeader({ current }: { current: CurrentPage }) {
       <div className="section-wrap header-inner">
         <Link className="brand" href="/" aria-label="FCMaddict — Trang chủ">
           <BrandMark />
-          <span>FCMaddict</span>
+          <span className="brand-copy"><strong>FCM</strong><small>ADDICT</small></span>
         </Link>
         <nav className="site-nav" aria-label="Điều hướng chính">
           <Link aria-current={current === "home" ? "page" : undefined} href="/">
@@ -47,6 +48,9 @@ export function SiteHeader({ current }: { current: CurrentPage }) {
             Hỗ trợ
           </Link>
         </nav>
+        <Link className="header-cta" href="/tools" data-analytics-source="header_cta">
+          Mở công cụ
+        </Link>
       </div>
     </header>
   );
@@ -59,7 +63,7 @@ export function SiteFooter() {
         <div>
           <Link className="brand" href="/">
             <BrandMark />
-            <span>FCMaddict</span>
+            <span className="brand-copy"><strong>FCM</strong><small>ADDICT</small></span>
           </Link>
           <p>Trợ lý cầu thủ và đội hình dành cho cộng đồng FC Mobile.</p>
         </div>

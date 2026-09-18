@@ -1,7 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { trackAnalytics } from "@/features/analytics/application/track-analytics";
+import { loadAppData } from "../application/load-app-data";
+import { httpAppDataRepository } from "../infrastructure/http-app-data-repository";
 import {
   calculateSquadOvr,
   findShardCombos,
@@ -12,7 +15,7 @@ import {
   type PlayerReview,
   type RankingCard,
   type ShardCombo,
-} from "./toolkit";
+} from "../domain/toolkit";
 
 type ToolTab = "home" | "players" | "rankings" | "shardiq" | "ovr" | "library";
 
@@ -47,6 +50,27 @@ function EmptyState({ children }: { children: string }) {
   return <div className="tool-empty">{children}</div>;
 }
 
+async function copyRedeemCode(
+  code: { id: number; code: string },
+  source: string,
+) {
+  try {
+    if (!navigator.clipboard) throw new Error("Clipboard unavailable");
+    await navigator.clipboard.writeText(code.code);
+    trackAnalytics("redeem_code_copy", {
+      code_id: code.id,
+      source,
+      status: "success",
+    });
+  } catch {
+    trackAnalytics("redeem_code_copy", {
+      code_id: code.id,
+      source,
+      status: "failure",
+    });
+  }
+}
+
 function PlayerTile({ player }: { player: LatestPlayer }) {
   return (
     <article className="player-tile">
@@ -71,7 +95,11 @@ function PlayerTile({ player }: { player: LatestPlayer }) {
 
 function ReviewTile({ review }: { review: PlayerReview }) {
   return (
-    <details className="review-tile">
+    <details
+      className="review-tile"
+      data-analytics-content-type="player_review"
+      data-analytics-content-id={review.id}
+    >
       <summary>
         <ImageOrInitial src={review.image} name={review.name} />
         <span className="review-copy"><small>{review.event} · {review.position}</small><b>{review.name}</b></span>
@@ -134,7 +162,7 @@ function HomeView({ data, openTab }: { data: AppData; openTab: (tab: ToolTab) =>
           ) : <EmptyState>Chưa có review.</EmptyState>}
           <div className="code-preview">
             <h3>Mã quà tặng</h3>
-            {activeCodes.slice(0, 4).map((code) => <button key={code.id} onClick={() => navigator.clipboard?.writeText(code.code)}><b>{code.code}</b><span>{code.reward || "Nhấn để sao chép"}</span></button>)}
+            {activeCodes.slice(0, 4).map((code) => <button key={code.id} onClick={() => void copyRedeemCode(code, "tools_home")}><b>{code.code}</b><span>{code.reward || "Nhấn để sao chép"}</span></button>)}
           </div>
         </section>
       </div>
@@ -155,14 +183,29 @@ function PlayersView({ data }: { data: AppData }) {
       .sort((left, right) => right.rating - left.rating);
   }, [data.latestPlayers, minimum, position, query]);
 
+  useEffect(() => {
+    const normalized = query.trim();
+    if (!normalized) return;
+    const timer = window.setTimeout(() => {
+      trackAnalytics("player_search", {
+        mode: "query",
+        query_length: normalized.length,
+        result_count: filtered.length,
+        position,
+        minimum_ovr: minimum,
+      });
+    }, 600);
+    return () => window.clearTimeout(timer);
+  }, [filtered.length, minimum, position, query]);
+
   return (
     <div className="tool-view-stack">
       <section className="tool-panel filter-panel">
         <div><p className="eyebrow">PLAYER DATABASE</p><h1>Cầu thủ</h1><p>{filtered.length} kết quả từ snapshot mới nhất.</p></div>
         <div className="filter-row">
           <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Tên, CLB, quốc gia, chương trình…" />
-          <select value={position} onChange={(event) => setPosition(event.target.value)}><option value="ALL">Mọi vị trí</option>{positions.map((item) => <option key={item}>{item}</option>)}</select>
-          <select value={minimum} onChange={(event) => setMinimum(Number(event.target.value))}><option value="0">Mọi OVR</option><option value="100">OVR 100+</option><option value="110">OVR 110+</option><option value="120">OVR 120+</option></select>
+          <select value={position} onChange={(event) => { const next = event.target.value; setPosition(next); trackAnalytics("player_search", { mode: "filter", filter_name: "position", filter_value: next }); }}><option value="ALL">Mọi vị trí</option>{positions.map((item) => <option key={item}>{item}</option>)}</select>
+          <select value={minimum} onChange={(event) => { const next = Number(event.target.value); setMinimum(next); trackAnalytics("player_search", { mode: "filter", filter_name: "minimum_ovr", filter_value: next }); }}><option value="0">Mọi OVR</option><option value="100">OVR 100+</option><option value="110">OVR 110+</option><option value="120">OVR 120+</option></select>
         </div>
       </section>
       <section className="player-grid">{filtered.map((player) => <PlayerTile key={player.id} player={player} />)}</section>
@@ -194,6 +237,14 @@ function RankingColumn({ title, cards }: { title: string; cards: RankingCard[] }
 function RankingsView({ data }: { data: AppData }) {
   const [position, setPosition] = useState("ST");
   const board = data.rankings[position];
+  useEffect(() => {
+    trackAnalytics("ranking_view", {
+      position,
+      top_count: board?.top.cards.length ?? 0,
+      mid_count: board?.mid.cards.length ?? 0,
+      low_count: board?.low.cards.length ?? 0,
+    });
+  }, [board, position]);
   return (
     <div className="tool-view-stack">
       <section className="tool-panel filter-panel">
@@ -238,7 +289,16 @@ function ShardView({ data }: { data: AppData }) {
     setCombos([]);
   }
   function calculate() {
-    setCombos(findShardCombos({ budget: Number(budget.replaceAll(/[^0-9]/g, "")), positions: selected, players: data.shardPlayers, event: event || undefined }));
+    const normalizedBudget = Number(budget.replaceAll(/[^0-9]/g, ""));
+    const nextCombos = findShardCombos({ budget: normalizedBudget, positions: selected, players: data.shardPlayers, event: event || undefined });
+    setCombos(nextCombos);
+    trackAnalytics("shardiq_run", {
+      budget: normalizedBudget,
+      event_filter: event || "all",
+      position_count: selected.length,
+      result_count: nextCombos.length,
+      status: nextCombos.length ? "success" : "empty",
+    });
   }
   return (
     <div className="tool-view-stack">
@@ -261,12 +321,35 @@ function OvrView() {
   const [bench, setBench] = useState<(number | null)[]>(Array(7).fill(null));
   const [badges, setBadges] = useState(0);
   const result = calculateSquadOvr({ starters, bench, badgeCount: badges });
+  const lastTrackedResult = useRef("");
+  useEffect(() => {
+    if (result.squadOvr == null) return;
+    const signature = JSON.stringify([formation, starters, bench, badges]);
+    const timer = window.setTimeout(() => {
+      if (lastTrackedResult.current === signature) return;
+      lastTrackedResult.current = signature;
+      trackAnalytics("ovr_calculate", {
+        formation,
+        starter_count: starters.filter((value) => value != null).length,
+        bench_count: bench.filter((value) => value != null).length,
+        badge_count: badges,
+        base_ovr: result.base ?? 0,
+        squad_ovr: result.squadOvr ?? 0,
+      });
+    }, 800);
+    return () => window.clearTimeout(timer);
+  }, [badges, bench, formation, result.base, result.squadOvr, starters]);
   function setValue(group: "starters" | "bench", index: number, raw: string) {
     const value = raw ? Math.min(150, Math.max(0, Number(raw))) : null;
     const setter = group === "starters" ? setStarters : setBench;
     setter((current) => current.map((item, itemIndex) => itemIndex === index ? value : item));
   }
-  function reset() { setStarters(Array(11).fill(null)); setBench(Array(7).fill(null)); setBadges(0); }
+  function reset() {
+    setStarters(Array(11).fill(null));
+    setBench(Array(7).fill(null));
+    setBadges(0);
+    trackAnalytics("ovr_reset", { formation });
+  }
   return (
     <div className="tool-view-stack">
       <section className="ovr-layout">
@@ -289,19 +372,29 @@ function OvrView() {
   );
 }
 
-function AssetGrid({ items }: { items: Asset[] }) {
-  return <div className="asset-grid">{items.map((item) => <article key={item.id}><ImageOrInitial src={item.image} name={item.name} /><div><h3>{item.name || "FC Mobile"}</h3><p>{[item.primary, item.secondary].filter(Boolean).join(" · ")}</p></div><a href={item.image} download target="_blank" rel="noreferrer">Tải</a></article>)}</div>;
+function AssetGrid({ items, assetType }: { items: Asset[]; assetType: "player" | "icon" }) {
+  return <div className="asset-grid">{items.map((item) => <article key={item.id}><ImageOrInitial src={item.image} name={item.name} /><div><h3>{item.name || "FC Mobile"}</h3><p>{[item.primary, item.secondary].filter(Boolean).join(" · ")}</p></div><a href={item.image} download target="_blank" rel="noreferrer" data-analytics-ignore="true" onClick={() => trackAnalytics("asset_download", { asset_id: item.id, asset_type: assetType })}>Tải</a></article>)}</div>;
 }
 
 function LibraryView({ data }: { data: AppData }) {
   const [section, setSection] = useState<"codes" | "cards" | "players" | "icons">("codes");
+  useEffect(() => {
+    const itemCount = section === "codes"
+      ? data.codes.filter((code) => code.active).length
+      : section === "cards"
+        ? data.cards.length
+        : section === "players"
+          ? data.playerRenders.length
+          : data.iconRenders.length;
+    trackAnalytics("library_view", { section, item_count: itemCount });
+  }, [data, section]);
   return (
     <div className="tool-view-stack">
       <section className="tool-panel filter-panel"><div><p className="eyebrow">FC MOBILE LIBRARY</p><h1>Thư viện</h1><p>Mã quà tặng, mẫu thẻ và ảnh render.</p></div><div className="position-pills"><button className={section === "codes" ? "active" : ""} onClick={() => setSection("codes")}>Mã quà tặng</button><button className={section === "cards" ? "active" : ""} onClick={() => setSection("cards")}>Mẫu thẻ</button><button className={section === "players" ? "active" : ""} onClick={() => setSection("players")}>Player renders</button><button className={section === "icons" ? "active" : ""} onClick={() => setSection("icons")}>Icon renders</button></div></section>
-      {section === "codes" && <div className="codes-grid">{data.codes.filter((code) => code.active).map((code) => <button key={code.id} onClick={() => navigator.clipboard?.writeText(code.code)}><span>ACTIVE</span><b>{code.code}</b><p>{code.reward || "Phần thưởng FC Mobile"}</p><small>{code.addedDate || "Nhấn để sao chép"}</small></button>)}</div>}
+      {section === "codes" && <div className="codes-grid">{data.codes.filter((code) => code.active).map((code) => <button key={code.id} onClick={() => void copyRedeemCode(code, "library")}><span>ACTIVE</span><b>{code.code}</b><p>{code.reward || "Phần thưởng FC Mobile"}</p><small>{code.addedDate || "Nhấn để sao chép"}</small></button>)}</div>}
       {section === "cards" && <div className="official-card-grid">{data.cards.map((card) => <article key={card.id}><img src={card.image} alt={card.title} loading="lazy" /><div><b>{card.title}</b><span>{card.type}</span></div></article>)}</div>}
-      {section === "players" && <AssetGrid items={data.playerRenders} />}
-      {section === "icons" && <AssetGrid items={data.iconRenders} />}
+      {section === "players" && <AssetGrid items={data.playerRenders} assetType="player" />}
+      {section === "icons" && <AssetGrid items={data.iconRenders} assetType="icon" />}
     </div>
   );
 }
@@ -310,26 +403,48 @@ export default function ToolsApp() {
   const [data, setData] = useState<AppData | null>(null);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState<ToolTab>("home");
+  function openTab(tab: ToolTab, source = "tools_home") {
+    setActiveTab(tab);
+    trackAnalytics("tool_open", { tool: tab, source });
+  }
+  function retryDataLoad() {
+    trackAnalytics("data_load", { status: "retry" });
+    location.reload();
+  }
   useEffect(() => {
     const controller = new AbortController();
-    const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-    fetch(`${basePath}/data/app-data.json`, { signal: controller.signal })
-      .then((response) => { if (!response.ok) throw new Error(`HTTP ${response.status}`); return response.json(); })
-      .then(setData)
-      .catch((reason) => { if (reason.name !== "AbortError") setError(String(reason)); });
+    const startedAt = performance.now();
+    loadAppData(httpAppDataRepository, controller.signal)
+      .then((payload: AppData) => {
+        setData(payload);
+        trackAnalytics("data_load", {
+          status: "success",
+          duration_ms: Math.round(performance.now() - startedAt),
+          player_count: payload.latestPlayers.length,
+          review_count: payload.reviews.length,
+        });
+      })
+      .catch((reason: unknown) => {
+        if (reason instanceof DOMException && reason.name === "AbortError") return;
+        setError(String(reason));
+        trackAnalytics("data_load", {
+          status: "failure",
+          error_type: reason instanceof Error ? reason.name : "unknown",
+        });
+      });
     return () => controller.abort();
   }, []);
 
   return (
     <main className="tools-shell">
       <nav className="tools-nav" aria-label="Công cụ FCMaddict">
-        {tabs.map((tab) => <button className={activeTab === tab.id ? "active" : ""} key={tab.id} onClick={() => setActiveTab(tab.id)}><span>{tab.short}</span>{tab.label}</button>)}
+        {tabs.map((tab) => <button className={activeTab === tab.id ? "active" : ""} key={tab.id} onClick={() => openTab(tab.id, "tools_nav")}><span>{tab.short}</span>{tab.label}</button>)}
       </nav>
       <div className="tools-content">
         {!data && !error && <div className="tool-loading"><span /><h1>Đang tải dữ liệu FC Mobile…</h1></div>}
-        {error && <div className="tool-error"><h1>Không tải được dữ liệu</h1><p>{error}</p><button className="button button-primary" onClick={() => location.reload()}>Thử lại</button></div>}
+        {error && <div className="tool-error"><h1>Không tải được dữ liệu</h1><p>{error}</p><button className="button button-primary" onClick={retryDataLoad}>Thử lại</button></div>}
         {data && <>
-          {activeTab === "home" && <HomeView data={data} openTab={setActiveTab} />}
+          {activeTab === "home" && <HomeView data={data} openTab={openTab} />}
           {activeTab === "players" && <PlayersView data={data} />}
           {activeTab === "rankings" && <RankingsView data={data} />}
           {activeTab === "shardiq" && <ShardView data={data} />}
