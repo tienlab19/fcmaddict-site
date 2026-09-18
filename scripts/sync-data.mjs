@@ -225,7 +225,9 @@ async function main() {
 
   const data = {
     generatedAt: new Date().toISOString(),
-    reviews: list(reviewsPayload).map(parseReview),
+    reviews: list(reviewsPayload)
+      .map(parseReview)
+      .filter((review) => review.name !== "Unknown" && review.position !== "-"),
     codes: list(codesPayload).map((item) => ({
       id: number(item.id),
       code: text(item.code),
