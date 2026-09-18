@@ -43,6 +43,11 @@ const pages = [
     title: "Công cụ FC Mobile — FCMaddict",
     marker: "Đang tải dữ liệu FC Mobile",
   },
+  {
+    path: "/redeem-codes",
+    title: "Mã quà tặng FC Mobile — FCMaddict",
+    marker: "Mã đang hoạt động",
+  },
 ];
 
 for (const page of pages) {
@@ -68,5 +73,9 @@ test("publishes website metadata and navigation", async () => {
   assert.match(html, /href="\/privacy"/i);
   assert.match(html, /href="\/support"/i);
   assert.match(html, /href="\/tools"/i);
+  assert.match(html, /href="\/tools\?tab=players"/i);
+  assert.match(html, /href="\/tools\?tab=reviews"/i);
+  assert.match(html, /href="\/tools\?tab=rankings"/i);
+  assert.match(html, /href="\/redeem-codes"/i);
   assert.match(html, /mailto:tientran99\.bka@gmail\.com/i);
 });

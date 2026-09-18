@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { calculateSquadOvr, findShardCombos } from "../features/tools/domain/toolkit.ts";
+import { calculateSquadOvr } from "../features/tools/application/calculate-squad-ovr.ts";
+import { findShardCombos } from "../features/tools/application/find-shard-combos.ts";
 
 test("OVR web giữ đúng công thức Flutter", () => {
   assert.deepEqual(

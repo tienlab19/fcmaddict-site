@@ -1,4 +1,4 @@
-import type { AppData } from "../domain/toolkit";
+import type { AppData } from "../domain/entities";
 
 export interface AppDataRepository {
   load(signal: AbortSignal): Promise<AppData>;

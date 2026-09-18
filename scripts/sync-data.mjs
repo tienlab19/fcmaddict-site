@@ -53,6 +53,17 @@ function parseReview(item) {
     pros: text(item.pros),
     cons: text(item.cons),
     verdict: text(item.finalVerdict),
+    skillPoints: [item.skillPoints1, item.skillPoints2, item.skillPoints3, item.skillpoints_4]
+      .map(text)
+      .filter(Boolean),
+    alternatives: [item.alternative1, item.alternative2, item.alternative3]
+      .map(text)
+      .filter(Boolean),
+    playstyles: [item.playstyle_1, item.playstyle_2, item.playstyle_3]
+      .map(text)
+      .filter(Boolean),
+    author: text(item.playerReviews_item),
+    createdDate: text(item.createdDate),
     stats: Array.from({ length: 6 }, (_, index) => ({
       label: text(item[`statsType${index + 1}`]) || `Stat ${index + 1}`,
       value: number(item[`stats${index + 1}`]),

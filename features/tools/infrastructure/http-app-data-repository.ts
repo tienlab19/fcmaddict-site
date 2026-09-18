@@ -1,5 +1,5 @@
 import type { AppDataRepository } from "../application/load-app-data";
-import type { AppData } from "../domain/toolkit";
+import type { AppData } from "../domain/entities";
 
 function parseAppData(value: unknown): AppData {
   if (!value || typeof value !== "object") throw new Error("Invalid app data");

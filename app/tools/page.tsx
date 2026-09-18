@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ToolsApp from "@/features/tools/presentation/ToolsApp";
+import ToolsAppContainer from "@/features/tools/ToolsAppContainer";
 import { SiteFooter, SiteHeader } from "../_components/SiteChrome";
 
 export const metadata: Metadata = {
@@ -11,7 +11,7 @@ export default function ToolsPage() {
   return (
     <div className="site-shell">
       <SiteHeader current="tools" />
-      <ToolsApp />
+      <ToolsAppContainer />
       <SiteFooter />
     </div>
   );
