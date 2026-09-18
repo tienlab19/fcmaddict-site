@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-type CurrentPage = "home" | "privacy" | "support";
+type CurrentPage = "home" | "tools" | "privacy" | "support";
 
 const BASE_PATH =
   process.env.GITHUB_PAGES === "true" ? "/fcmaddict-site" : "";
@@ -30,6 +30,9 @@ export function SiteHeader({ current }: { current: CurrentPage }) {
         <nav className="site-nav" aria-label="Điều hướng chính">
           <Link aria-current={current === "home" ? "page" : undefined} href="/">
             Giới thiệu
+          </Link>
+          <Link aria-current={current === "tools" ? "page" : undefined} href="/tools">
+            Công cụ
           </Link>
           <Link
             aria-current={current === "privacy" ? "page" : undefined}
@@ -62,6 +65,7 @@ export function SiteFooter() {
         </div>
         <div className="footer-links">
           <Link href="/">Trang chủ</Link>
+          <Link href="/tools">Công cụ</Link>
           <Link href="/privacy">Quyền riêng tư</Link>
           <Link href="/support">Hỗ trợ</Link>
           <a href="mailto:tientran99.bka@gmail.com">Email</a>

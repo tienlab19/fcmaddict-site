@@ -78,9 +78,9 @@ export default function Home() {
               hoàn toàn miễn phí. Không tài khoản, không quảng cáo.
             </p>
             <div className="hero-actions">
-              <a className="button button-primary" href="#features">
-                Khám phá tính năng
-              </a>
+              <Link className="button button-primary" href="/tools">
+                Mở FCMaddict Web
+              </Link>
               <Link className="button button-secondary" href="/support">
                 Trung tâm hỗ trợ
               </Link>
@@ -201,8 +201,8 @@ export default function Home() {
             luôn đặt trải nghiệm của bạn lên trước.
           </p>
           <div className="hero-actions centered">
-            <Link className="button button-primary" href="/support">
-              Liên hệ hỗ trợ
+            <Link className="button button-primary" href="/tools">
+              Dùng công cụ ngay
             </Link>
             <Link className="button button-secondary" href="/privacy">
               Quyền riêng tư

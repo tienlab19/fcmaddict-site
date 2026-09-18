@@ -38,6 +38,11 @@ const pages = [
     title: "Hỗ trợ — FCMaddict",
     marker: "Chúng tôi có thể giúp gì?",
   },
+  {
+    path: "/tools",
+    title: "Công cụ FC Mobile — FCMaddict",
+    marker: "Đang tải dữ liệu FC Mobile",
+  },
 ];
 
 for (const page of pages) {
@@ -62,5 +67,6 @@ test("publishes website metadata and navigation", async () => {
   );
   assert.match(html, /href="\/privacy"/i);
   assert.match(html, /href="\/support"/i);
+  assert.match(html, /href="\/tools"/i);
   assert.match(html, /mailto:tientran99\.bka@gmail\.com/i);
 });
