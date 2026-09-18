@@ -7,6 +7,9 @@ const forumApi = "https://www.fcmobileforum.com/api/v1";
 const positions = ["ST", "LW", "RW", "CAM", "CM", "CDM", "LM", "RM", "LB", "RB", "CB", "GK"];
 
 async function fetchJson(url, referer = "https://www.fcmobileforum.com/") {
+  if (process.env.FCMADDICT_OFFLINE === "1") {
+    throw new Error("Offline snapshot test");
+  }
   const response = await fetch(url, {
     headers: {
       accept: "application/json",
@@ -199,13 +202,49 @@ async function safe(name, loader, fallback) {
 async function main() {
   const previous = await readPrevious();
   const seedPlayers = await readSeedPlayers();
-  const [reviewsPayload, codesPayload, cardsPayload, rendersPayload, iconsPayload, shardPayload, topPayload, midPayload, lowPayload, latestPlayers] = await Promise.all([
-    safe("reviews", () => fetchJson(`${forumApi}/player-reviews-new?limit=120&offset=0`), previous.reviews ?? []),
-    safe("codes", () => fetchJson(`${forumApi}/redeem-codes`), previous.codes ?? []),
-    safe("cards", () => fetchJson(`${forumApi}/official-cards-new?limit=80&offset=0`), previous.cards ?? []),
-    safe("player renders", () => fetchJson(`${forumApi}/player-renders?limit=60&offset=0`), previous.playerRenders ?? []),
-    safe("icon renders", () => fetchJson(`${forumApi}/icon-renders?limit=60&offset=0`), previous.iconRenders ?? []),
-    safe("ShardIQ", () => fetchJson(`${forumApi}/shard-combo-calculator`), previous.shardPlayers ?? []),
+  const [reviews, codes, cards, playerRenders, iconRenders, shardPlayers, topPayload, midPayload, lowPayload, latestPlayers] = await Promise.all([
+    safe("reviews", async () => list(await fetchJson(`${forumApi}/player-reviews-new?limit=120&offset=0`))
+      .map(parseReview)
+      .filter((review) => review.name !== "Unknown" && review.position !== "-"), previous.reviews ?? []),
+    safe("codes", async () => list(await fetchJson(`${forumApi}/redeem-codes`)).map((item) => ({
+      id: number(item.id),
+      code: text(item.code),
+      reward: text(item.reward),
+      addedDate: text(item.added_date),
+      active: number(item.is_active) === 1,
+    })).filter((item) => item.code), previous.codes ?? []),
+    safe("cards", async () => list(await fetchJson(`${forumApi}/official-cards-new?limit=80&offset=0`)).slice(0, 80).map((item) => ({
+      id: number(item.id),
+      title: text(item.title),
+      image: text(item.image_url),
+      animatedImage: text(item.animated_card),
+      type: text(item.card_type),
+    })).filter((item) => item.image), previous.cards ?? []),
+    safe("player renders", async () => list(await fetchJson(`${forumApi}/player-renders?limit=60&offset=0`)).slice(0, 60).map((item) => ({
+      id: number(item.id),
+      name: text(item.playerName),
+      image: text(item.playerRenders),
+      primary: text(item.club),
+      secondary: text(item.nationality),
+    })).filter((item) => item.image), previous.playerRenders ?? []),
+    safe("icon renders", async () => list(await fetchJson(`${forumApi}/icon-renders?limit=60&offset=0`)).slice(0, 60).map((item) => ({
+      id: number(item.id),
+      name: text(item.playerRenders),
+      image: text(item.playerImage),
+      primary: text(item.nation),
+      secondary: "Icon",
+    })).filter((item) => item.image), previous.iconRenders ?? []),
+    safe("ShardIQ", async () => list(await fetchJson(`${forumApi}/shard-combo-calculator`)).map((item) => ({
+      id: text(item.id),
+      name: text(item.player_name),
+      image: text(item.player_card),
+      overall: number(item.ovr),
+      position: text(item.position).toUpperCase(),
+      shardValue: number(item.shard_value),
+      event: text(item.event),
+      quality: text(item.quality).toLowerCase(),
+      alternatives: text(item.alternative_pos).split(",").map((value) => value.trim().toUpperCase()).filter(Boolean),
+    })).filter((item) => item.id && item.position), previous.shardPlayers ?? []),
     safe("top rankings", () => fetchJson(`${forumApi}/top-10-cards?position=ST`), null),
     safe("mid rankings", () => fetchJson(`${forumApi}/top-5-mid-cards?position=ST`), null),
     safe("low rankings", () => fetchJson(`${forumApi}/top-5-low-cards?position=ST`), null),
@@ -225,49 +264,13 @@ async function main() {
 
   const data = {
     generatedAt: new Date().toISOString(),
-    reviews: list(reviewsPayload)
-      .map(parseReview)
-      .filter((review) => review.name !== "Unknown" && review.position !== "-"),
-    codes: list(codesPayload).map((item) => ({
-      id: number(item.id),
-      code: text(item.code),
-      reward: text(item.reward),
-      addedDate: text(item.added_date),
-      active: number(item.is_active) === 1,
-    })).filter((item) => item.code),
-    cards: list(cardsPayload).slice(0, 80).map((item) => ({
-      id: number(item.id),
-      title: text(item.title),
-      image: text(item.image_url),
-      animatedImage: text(item.animated_card),
-      type: text(item.card_type),
-    })).filter((item) => item.image),
-    playerRenders: list(rendersPayload).slice(0, 60).map((item) => ({
-      id: number(item.id),
-      name: text(item.playerName),
-      image: text(item.playerRenders),
-      primary: text(item.club),
-      secondary: text(item.nationality),
-    })).filter((item) => item.image),
-    iconRenders: list(iconsPayload).slice(0, 60).map((item) => ({
-      id: number(item.id),
-      name: text(item.playerRenders),
-      image: text(item.playerImage),
-      primary: text(item.nation),
-      secondary: "Icon",
-    })).filter((item) => item.image),
+    reviews,
+    codes,
+    cards,
+    playerRenders,
+    iconRenders,
     rankings,
-    shardPlayers: list(shardPayload).map((item) => ({
-      id: text(item.id),
-      name: text(item.player_name),
-      image: text(item.player_card),
-      overall: number(item.ovr),
-      position: text(item.position).toUpperCase(),
-      shardValue: number(item.shard_value),
-      event: text(item.event),
-      quality: text(item.quality).toLowerCase(),
-      alternatives: text(item.alternative_pos).split(",").map((value) => value.trim().toUpperCase()).filter(Boolean),
-    })).filter((item) => item.id && item.position),
+    shardPlayers,
     latestPlayers,
   };
 
