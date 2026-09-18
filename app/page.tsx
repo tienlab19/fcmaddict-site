@@ -27,7 +27,7 @@ const features = [
   {
     code: "OVR",
     title: "Máy tính OVR đội hình",
-    body: "Chọn sơ đồ, nhập OVR đội chính và dự bị để dự đoán OVR toàn đội ngay trên thiết bị, không cần chờ tải mạng.",
+    body: "Chọn sơ đồ, nhập OVR đội chính và dự bị để dự đoán OVR toàn đội trực tiếp trong trình duyệt.",
   },
   {
     code: "GIFT",
@@ -37,15 +37,15 @@ const features = [
   {
     code: "IMG",
     title: "Thư viện thẻ & ảnh render",
-    body: "Khám phá thẻ cầu thủ và ảnh render chất lượng cao, lưu ảnh yêu thích vào Photos khi bạn chủ động chọn tải.",
+    body: "Khám phá thẻ cầu thủ và ảnh render chất lượng cao, sau đó tải hình ảnh bạn cần về thiết bị.",
   },
 ];
 
 const steps = [
   {
     code: "1",
-    title: "Mở app, không cần đăng nhập",
-    body: "Cài đặt và dùng ngay toàn bộ tính năng. Không tài khoản, không email, không bước xác thực rườm rà.",
+    title: "Mở website, không cần đăng nhập",
+    body: "Truy cập bằng trình duyệt và dùng ngay. Không cài đặt, không tài khoản, không bước xác thực rườm rà.",
   },
   {
     code: "2",
@@ -74,7 +74,7 @@ export default function Home() {
             </h1>
             <p className="hero-lead">
               FCMaddict gom mọi công cụ bạn cần cho FC Mobile — tra cứu cầu thủ,
-              tối ưu shard và kiểm tra OVR — vào một ứng dụng nhanh, trực quan và
+              tối ưu shard và kiểm tra OVR — vào một website nhanh, trực quan và
               hoàn toàn miễn phí. Không tài khoản, không quảng cáo.
             </p>
             <div className="hero-actions">
@@ -88,7 +88,7 @@ export default function Home() {
             <div className="trust-row" aria-label="Thông tin nhanh">
               <span>Miễn phí 100%</span>
               <span>Không quảng cáo</span>
-              <span>Không mua trong app</span>
+              <span>Không cần cài đặt</span>
               <span>Tiếng Việt & English</span>
             </div>
           </div>
@@ -124,10 +124,10 @@ export default function Home() {
 
         <section className="stats-band" aria-label="Điểm nổi bật">
           <div className="section-wrap stats-grid">
-            <div><strong>6</strong><span>Công cụ trong 1 app</span></div>
+            <div><strong>6</strong><span>Công cụ trong 1 website</span></div>
             <div><strong>2</strong><span>Ngôn ngữ Việt & Anh</span></div>
             <div><strong>0đ</strong><span>Chi phí sử dụng</span></div>
-            <div><strong>iOS</strong><span>iPhone & iPad</span></div>
+            <div><strong>Web</strong><span>Điện thoại & máy tính</span></div>
           </div>
         </section>
 
@@ -161,7 +161,7 @@ export default function Home() {
               <h2>Bắt đầu chỉ trong ba bước</h2>
             </div>
             <p>
-              Không cài đặt phức tạp, không đăng ký. Mở app là dùng được ngay
+              Không cài đặt, không đăng ký. Mở website là dùng được ngay
               mọi tính năng.
             </p>
           </div>
@@ -182,13 +182,12 @@ export default function Home() {
         <section className="section-wrap privacy-callout">
           <div>
             <p className="eyebrow">TÔN TRỌNG QUYỀN RIÊNG TƯ</p>
-            <h2>Dữ liệu của bạn ở lại trên máy.</h2>
+            <h2>Không tài khoản, không theo dõi quảng cáo.</h2>
           </div>
           <div className="callout-copy">
             <p>
-              Lựa chọn ngôn ngữ và dữ liệu hỗ trợ được lưu cục bộ, bản dịch xử lý
-              ngay trên thiết bị. Quyền Photos chỉ được hỏi khi bạn chủ động lưu
-              một hình ảnh.
+              FCMaddict không yêu cầu thông tin cá nhân để sử dụng website. Dữ
+              liệu nhập vào công cụ được xử lý trong trình duyệt khi có thể.
             </p>
             <Link href="/privacy">Đọc Chính sách quyền riêng tư →</Link>
           </div>

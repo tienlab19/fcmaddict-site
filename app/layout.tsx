@@ -45,14 +45,14 @@ export const metadata: Metadata = {
     siteName: "FCMaddict",
     title: "FCMaddict — Mọi quyết định đội hình, sáng rõ hơn",
     description:
-      "Khám phá cầu thủ, tối ưu shard và kiểm tra OVR trong một ứng dụng gọn nhẹ.",
+      "Khám phá cầu thủ, tối ưu shard và kiểm tra OVR trên một website gọn nhẹ.",
     images: [{ url: ogImage, width: 1672, height: 941, alt: "FCMaddict" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "FCMaddict — Trợ lý cầu thủ & đội hình",
     description:
-      "Khám phá cầu thủ, tối ưu shard và kiểm tra OVR trong một ứng dụng gọn nhẹ.",
+      "Khám phá cầu thủ, tối ưu shard và kiểm tra OVR trên một website gọn nhẹ.",
     images: [ogImage],
   },
 };

@@ -19,9 +19,9 @@ const faqs = [
       "Hãy kiểm tra kết nối Internet, sau đó kéo xuống để làm mới hoặc bấm nút làm mới trên màn hình. Một số nguồn dữ liệu bên thứ ba có thể tạm thời gián đoạn.",
   },
   {
-    question: "Ứng dụng có đọc thư viện ảnh của tôi không?",
+    question: "Website có truy cập tệp cá nhân của tôi không?",
     answer:
-      "Không. Ứng dụng chỉ xin quyền thêm ảnh vào Photos sau khi bạn chủ động bấm Tải. Ứng dụng không đọc hoặc tải ảnh cá nhân lên máy chủ.",
+      "Không. FCMaddict chỉ tải tệp xuống khi bạn chủ động chọn. Website không tự đọc hoặc tải tệp cá nhân từ thiết bị của bạn.",
   },
   {
     question: "Làm thế nào để đổi ngôn ngữ?",
@@ -45,8 +45,8 @@ export default function SupportPage() {
             <p className="eyebrow">SUPPORT CENTER</p>
             <h1>Chúng tôi có thể giúp gì?</h1>
             <p>
-              Gửi câu hỏi, báo lỗi hoặc đề xuất tính năng. Hãy kèm thông tin thiết
-              bị để chúng tôi hỗ trợ nhanh hơn.
+              Gửi câu hỏi, báo lỗi hoặc đề xuất tính năng. Hãy kèm trình duyệt và
+              đường dẫn gặp lỗi để chúng tôi hỗ trợ nhanh hơn.
             </p>
           </div>
           <div className="support-contact-card">
@@ -67,9 +67,9 @@ export default function SupportPage() {
             <p className="eyebrow">TRƯỚC KHI GỬI YÊU CẦU</p>
             <h2>Thông tin nên đính kèm</h2>
             <ol>
-              <li><span>01</span><p><b>Thiết bị</b>Ví dụ: iPhone 15 Pro hoặc iPad Pro.</p></li>
-              <li><span>02</span><p><b>Phiên bản hệ điều hành</b>Ví dụ: iOS 26.5.</p></li>
-              <li><span>03</span><p><b>Phiên bản ứng dụng</b>Hiển thị trong thông tin ứng dụng.</p></li>
+              <li><span>01</span><p><b>Trình duyệt</b>Ví dụ: Chrome, Safari hoặc Firefox.</p></li>
+              <li><span>02</span><p><b>Thiết bị</b>Điện thoại, máy tính bảng hoặc máy tính.</p></li>
+              <li><span>03</span><p><b>Đường dẫn</b>Trang hoặc công cụ đang gặp lỗi.</p></li>
               <li><span>04</span><p><b>Mô tả và ảnh chụp</b>Không gửi mật khẩu hoặc thông tin nhạy cảm.</p></li>
             </ol>
           </div>
@@ -109,7 +109,7 @@ export default function SupportPage() {
             className="button button-secondary"
             href="mailto:tientran99.bka@gmail.com?subject=FCMaddict%20Support"
           >
-            Mở ứng dụng email
+            Gửi email
           </a>
         </section>
       </main>

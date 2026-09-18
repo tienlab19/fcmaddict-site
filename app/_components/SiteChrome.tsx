@@ -61,16 +61,16 @@ export function SiteFooter() {
           <p>Trợ lý cầu thủ và đội hình dành cho cộng đồng FC Mobile.</p>
         </div>
         <div className="footer-links">
-          <Link href="/">Marketing</Link>
-          <Link href="/privacy">Privacy Policy</Link>
-          <Link href="/support">Support</Link>
+          <Link href="/">Trang chủ</Link>
+          <Link href="/privacy">Quyền riêng tư</Link>
+          <Link href="/support">Hỗ trợ</Link>
           <a href="mailto:tientran99.bka@gmail.com">Email</a>
         </div>
       </div>
       <div className="section-wrap footer-legal">
         <span>© 2026 Tien Tran. All rights reserved.</span>
         <span>
-          FCMaddict là ứng dụng độc lập, không liên kết hoặc được Electronic Arts
+          FCMaddict là website độc lập, không liên kết hoặc được Electronic Arts
           Inc. xác nhận.
         </span>
       </div>

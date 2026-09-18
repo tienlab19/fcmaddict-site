@@ -52,7 +52,7 @@ for (const page of pages) {
   });
 }
 
-test("publishes App Store metadata and navigation", async () => {
+test("publishes website metadata and navigation", async () => {
   const response = await render("/");
   const html = await response.text();
 
